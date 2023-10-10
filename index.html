@@ -3,53 +3,61 @@
     <head>
         <title>P5 BASKARA</title>
         <link rel="icon" type="image/png" href="assets/c.png">
-        <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+        <script src="index.js"></script>
+        <style>
+            .titletext {
+                font-size: calc(100% + 1vw + 1vh);
+            }
+            .dropdownicon {
+                width: 3vw;
+            }
+            .dropdowntext {
+                font-size: calc(5% + 1vw + 1vh);
+            }
+            @media (max-width: 991.98px) {
+                .titletext {
+                    font-size: calc(100% + 2vw + 2vh);
+                }
+                .dropdownicon {
+                    width: 7vw;
+                }
+                .dropdowntext {
+                    font-size: calc(50% + 1vw + 1vh);
+                }
+            };
+        </style>
     </head>
     <body class="bg-dark">
-        <div class="container-fluid bg-white text-dark d-flex flex-row justify-content-between sticky-top p-1 align-items-center" id="header">
-            <h1 style="font-size: calc(100% + 1vw + 1vh)">ONEBRIDGE 67</h1>
+        <div class="container-fluid bg-white text-dark d-flex flex-row justify-content-between sticky-top align-items-center border-0" id="header">
+            <div class="d-flex flex-row justify-content-left align-items-center" id="title">
+                <h1 class="titletext font-monospace">ONEBRIDGE 67</h1>
+                &nbsp;&nbsp;
+            </div>
             <div class="dropdown" id="dropdown">
-                <button class="btn bg-white border-0" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="3vw" fill="currentColor" class="bi bi-list img-fluid" viewBox="0 0 16 16">
+                <button class="btn bg-white shadow-none border-0" type="button" id="dropdownMenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-list dropdownicon" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                     </svg>
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu" id="menu">
-                    <li><button class="dropdown-item" type="button" id="a">Kata Pengantar</button></li>
-                    <li><button class="dropdown-item" type="button" id="b">Daftar Isi</button></li>
-                    <li><button class="dropdown-item" type="button" id="c">Klasifikasi Bahasa Minahasa</button></li>
-                    <li><button class="dropdown-item" type="button" id="d">Kisah Legenda Danau Tondano</button></li>
-                    <li><button class="dropdown-item" type="button" id="e">Mini Kamus</button></li>
-                    <li><button class="dropdown-item" type="button" id="f">Peribahasa Minahasa</button></li>
-                    <li><button class="dropdown-item" type="button" id="g">Sastrawan Minahasa</button></li>
-                    <li><button class="dropdown-item" type="button" id="h">Daftar Pustaka</button></li>
-                    <li><button class="dropdown-item" type="button" id="i">Credit</button></li>
+                <ul class="dropdown-menu dropdown-menu-end dropdowntext" aria-labelledby="dropdownMenu" id="menu">
+                    <li><button class="dropdown-item" type="button" id="a"><p>Kata Pengantar</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="b"><p>Daftar Isi</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="c"><p>Klasifikasi Bahasa Minahasa</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="d"><p>Kisah Legenda Danau Tondano</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="e"><p>Mini Kamus</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="f"><p>Peribahasa Minahasa</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="g"><p>Sastrawan Minahasa</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="h"><p>Daftar Pustaka</p></button></li>
+                    <li><button class="dropdown-item" type="button" id="i"><p>Credit</p></button></li>
                 </ul>
             </div>
         </div>
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <canvas id="1"></canvas>
-            <canvas id="2"></canvas>
-            <canvas id="3"></canvas>
-            <canvas id="4"></canvas>
-            <canvas id="5"></canvas>
-            <canvas id="6"></canvas>
-            <canvas id="7"></canvas>
-            <canvas id="8"></canvas>
-            <canvas id="9"></canvas>
-            <canvas id="10"></canvas>
-            <canvas id="11"></canvas>
-            <canvas id="12"></canvas>
-            <canvas id="13"></canvas>
-            <canvas id="14"></canvas>
-            <canvas id="15"></canvas>
-            <canvas id="16"></canvas>
-            <canvas id="17"></canvas>
-            <canvas id="18"></canvas>
-            <canvas id="19"></canvas>
+        <div class="d-flex flex-column justify-content-center align-items-center" id="content">
+            <h1 class="font-monospace text-white" id="jsquestion">Please Enable Javascript</h1>
         </div>
     </body>
-    <script src="index.js"></script>
+    <script>run()</script>
 </html>

@@ -1,76 +1,79 @@
-var pdfjsLib = window["pdfjs-dist/build/pdf"]
-var loadingTask = pdfjsLib.getDocument({
-    url: "assets/baskara.pdf",
-    crossDomain: true,
-    mode:'no-cors',
-    'Access-Control-Allow-Credentials': true,
-    'Access-Control-Allow-Headers':'*',
-    'Access-Control-Allow-Methods':"POST, GET, OPTIONS, DELETE, PUT", 
-    'Access-Control-Allow-Methods':'GET', 
-    httpHeaders: {'Access-Control-Allow-Origin':'*'}
-});
+async function run() {
+    document.getElementById("jsquestion").remove()
+ 
+    const loadingImg = document.createElement("img")
+    loadingImg.setAttribute("class", "img-fluid")
+    loadingImg.setAttribute("src", "assets/sun-loading.gif")
+    loadingImg.setAttribute("style", "width: 10%; height: 10%")
 
-loadingTask.promise.then(function(pdf) {
-    Promise.all([
-        renderPage(1),
-        renderPage(2),
-        renderPage(3),
-        renderPage(4),
-        renderPage(5),
-        renderPage(6),
-        renderPage(7),
-        renderPage(8),
-        renderPage(9),
-        renderPage(10),
-        renderPage(11),
-        renderPage(12),
-        renderPage(13),
-        renderPage(14),
-        renderPage(15),
-        renderPage(16),
-        renderPage(17),
-        renderPage(18),
-        renderPage(19)
-    ]).then(function() {
-        document.getElementById("a").addEventListener("click", () => scrollTo(2), false);
-        document.getElementById("b").addEventListener("click", () => scrollTo(3), false);
-        document.getElementById("c").addEventListener("click", () => scrollTo(4), false);
-        document.getElementById("d").addEventListener("click", () => scrollTo(6), false);
-        document.getElementById("e").addEventListener("click", () => scrollTo(13), false);
-        document.getElementById("f").addEventListener("click", () => scrollTo(14), false);
-        document.getElementById("g").addEventListener("click", () => scrollTo(15), false);
-        document.getElementById("h").addEventListener("click", () => scrollTo(17), false);
-        document.getElementById("i").addEventListener("click", () => scrollTo(18), false);
-    });
+    document.getElementById("title").appendChild(loadingImg)
 
-    function scrollTo(i) {
-        return document.getElementById(`${i}`).scrollIntoView();
+    for (let i = 1; i <= 19; i++) {
+        const canvas = document.createElement("canvas")
+        canvas.setAttribute("id", `${i}`)
+
+        document.getElementById("content").appendChild(canvas)
     }
 
-    function renderPage(i) {
-        return pdf.getPage(i).then(function(page) {
-            var scale = 1.5;
-            var viewport = page.getViewport({ scale: scale, });
-            var outputScale = window.devicePixelRatio || 1;
+    var pdfjsLib = window["pdfjs-dist/build/pdf"]
+    var pdf = await pdfjsLib.getDocument("assets/baskara.pdf").promise
+
+    const render = []
+
+    for (let i = 1; i <= 19; i++) {
+        const num = i
+        render.push(renderPage(num))
+    }
+
+    await Promise.all(render)
+
+    loadingImg.remove()
+
+    dropdownMenuBtn("a", 2)
+    dropdownMenuBtn("b", 3)
+    dropdownMenuBtn("c", 4)
+    dropdownMenuBtn("d", 6)
+    dropdownMenuBtn("e", 13)
+    dropdownMenuBtn("f", 14)
+    dropdownMenuBtn("g", 15)
+    dropdownMenuBtn("h", 17)
+    dropdownMenuBtn("i", 18)
+
+    function dropdownMenuBtn(id, page) {
+        document.getElementById(`${id}`).addEventListener("click", () => scrollTo(page), false);
+    }
+
+    function scrollTo(i) {
+        return document.getElementById(`${i}`).scrollIntoView()
+    }
+
+    async function renderPage(i) {
+        const page = await pdf.getPage(i)
         
-            var canvas = document.getElementById(`${i}`);
-            var context = canvas.getContext('2d');
-        
-            canvas.width = Math.floor(viewport.width * outputScale);
-            canvas.height = Math.floor(viewport.height * outputScale);
-            canvas.style.width = Math.floor(viewport.width) + "px";
-            canvas.style.height =  Math.floor(viewport.height) + "px";
-        
-            var transform = outputScale !== 1
+        var viewportOriginal = page.getViewport({ scale: 1 })
+        var scale = Math.min((window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) / viewportOriginal.width, 1.5)
+        var viewport = page.getViewport({ scale: scale, })
+        var outputScale = window.devicePixelRatio || 1
+    
+        var canvas = document.getElementById(`${i}`);
+        var context = canvas.getContext('2d');
+    
+        canvas.width = Math.floor(viewport.width * outputScale)
+        canvas.height = Math.floor(viewport.height * outputScale)
+        canvas.style.width = Math.floor(viewport.width) + "px"
+        canvas.style.height =  Math.floor(viewport.height) + "px"
+    
+        var transform = outputScale !== 1
             ? [outputScale, 0, 0, outputScale, 0, 0]
-            : null;
-        
-            var renderContext = {
+            : null
+    
+        var renderContext = {
             canvasContext: context,
             transform: transform,
             viewport: viewport
-            };
-            page.render(renderContext);
-        });
+        }
+
+        await page.render(renderContext).promise
     }
-});
+}
+
