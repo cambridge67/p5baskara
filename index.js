@@ -1,5 +1,4 @@
 var pdfjsLib = window["pdfjs-dist/build/pdf"]
-var index = 1
 var loadingTask = pdfjsLib.getDocument({
     url: "assets/baskara.pdf",
     crossDomain: true,
@@ -11,33 +10,50 @@ var loadingTask = pdfjsLib.getDocument({
     httpHeaders: {'Access-Control-Allow-Origin':'*'}
 });
 
-renderPage(index)
+loadingTask.promise.then(function(pdf) {
+    Promise.all([
+        renderPage(1),
+        renderPage(2),
+        renderPage(3),
+        renderPage(4),
+        renderPage(5),
+        renderPage(6),
+        renderPage(7),
+        renderPage(8),
+        renderPage(9),
+        renderPage(10),
+        renderPage(11),
+        renderPage(12),
+        renderPage(13),
+        renderPage(14),
+        renderPage(15),
+        renderPage(16),
+        renderPage(17),
+        renderPage(18),
+        renderPage(19)
+    ]).then(function() {
+        document.getElementById("a").addEventListener("click", () => scrollTo(2), false);
+        document.getElementById("b").addEventListener("click", () => scrollTo(3), false);
+        document.getElementById("c").addEventListener("click", () => scrollTo(4), false);
+        document.getElementById("d").addEventListener("click", () => scrollTo(6), false);
+        document.getElementById("e").addEventListener("click", () => scrollTo(13), false);
+        document.getElementById("f").addEventListener("click", () => scrollTo(14), false);
+        document.getElementById("g").addEventListener("click", () => scrollTo(15), false);
+        document.getElementById("h").addEventListener("click", () => scrollTo(17), false);
+        document.getElementById("i").addEventListener("click", () => scrollTo(18), false);
+    });
 
-document.getElementById("btnprev").addEventListener("click", () => renderPage(index-1), false)
-document.getElementById("btnnext").addEventListener("click", () => renderPage(index+1), false)
-
-document.getElementById("a").addEventListener("click", () => renderPage(2), false)
-document.getElementById("b").addEventListener("click", () => renderPage(3), false)
-document.getElementById("c").addEventListener("click", () => renderPage(4), false)
-document.getElementById("d").addEventListener("click", () => renderPage(6), false)
-document.getElementById("e").addEventListener("click", () => renderPage(13), false)
-document.getElementById("f").addEventListener("click", () => renderPage(14), false)
-document.getElementById("g").addEventListener("click", () => renderPage(15), false)
-document.getElementById("h").addEventListener("click", () => renderPage(17), false)
-document.getElementById("i").addEventListener("click", () => renderPage(18), false)
-
-function renderPage(i) {
-    if (i < 1 || i > 19) {
-        return
+    function scrollTo(i) {
+        return document.getElementById(`${i}`).scrollIntoView();
     }
-    index = i
-    return loadingTask.promise.then(function(pdf) {
-        pdf.getPage(i).then(function(page) {
+
+    function renderPage(i) {
+        return pdf.getPage(i).then(function(page) {
             var scale = 1.0;
             var viewport = page.getViewport({ scale: scale, });
             var outputScale = window.devicePixelRatio || 1;
         
-            var canvas = document.getElementById('the-canvas');
+            var canvas = document.getElementById(`${i}`);
             var context = canvas.getContext('2d');
         
             canvas.width = Math.floor(viewport.width * outputScale);
@@ -55,6 +71,6 @@ function renderPage(i) {
             viewport: viewport
             };
             page.render(renderContext);
-        })
-    })
-}
+        });
+    }
+});
