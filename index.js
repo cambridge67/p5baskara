@@ -15,8 +15,10 @@ async function run() {
         document.getElementById("content").appendChild(canvas)
     }
 
-    var pdfjsLib = window["pdfjs-dist/build/pdf"]
-    var pdf = await pdfjsLib.getDocument("assets/baskara.pdf").promise
+    const pdfjsLib = window["pdfjs-dist/build/pdf"]
+
+    const pdfRaw = await fetch("assets/baskara.pdf").then(res => res.arrayBuffer())
+    const pdf = await pdfjsLib.getDocument(pdfRaw).promise
 
     const render = []
 
@@ -50,24 +52,24 @@ async function run() {
     async function renderPage(i) {
         const page = await pdf.getPage(i)
         
-        var viewportOriginal = page.getViewport({ scale: 1 })
-        var scale = Math.min((window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) / viewportOriginal.width, 1.5)
-        var viewport = page.getViewport({ scale: scale, })
-        var outputScale = window.devicePixelRatio || 1
+        const viewportOriginal = page.getViewport({ scale: 1 })
+        const scale = Math.min((window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) / viewportOriginal.width, 1.5)
+        const viewport = page.getViewport({ scale: scale, })
+        const outputScale = window.devicePixelRatio || 1
     
-        var canvas = document.getElementById(`${i}`);
-        var context = canvas.getContext('2d');
+        const canvas = document.getElementById(`${i}`);
+        const context = canvas.getContext('2d');
     
         canvas.width = Math.floor(viewport.width * outputScale)
         canvas.height = Math.floor(viewport.height * outputScale)
         canvas.style.width = Math.floor(viewport.width) + "px"
         canvas.style.height =  Math.floor(viewport.height) + "px"
     
-        var transform = outputScale !== 1
+        const transform = outputScale !== 1
             ? [outputScale, 0, 0, outputScale, 0, 0]
             : null
     
-        var renderContext = {
+        const renderContext = {
             canvasContext: context,
             transform: transform,
             viewport: viewport
