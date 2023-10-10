@@ -28,9 +28,7 @@ async function run() {
     }
 
     await Promise.all(render)
-
-    loadingImg.remove()
-
+    
     dropdownMenuBtn("a", 2)
     dropdownMenuBtn("b", 3)
     dropdownMenuBtn("c", 4)
@@ -40,6 +38,10 @@ async function run() {
     dropdownMenuBtn("g", 15)
     dropdownMenuBtn("h", 17)
     dropdownMenuBtn("i", 18)
+    
+    await pdf.cleanup()
+    
+    loadingImg.remove()
 
     function dropdownMenuBtn(id, page) {
         document.getElementById(`${id}`).addEventListener("click", () => scrollTo(page), false);
@@ -76,6 +78,7 @@ async function run() {
         }
 
         await page.render(renderContext).promise
+        await page.cleanup()
     }
 }
 
