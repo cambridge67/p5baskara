@@ -49,7 +49,7 @@ loadingTask.promise.then(function(pdf) {
 
     function renderPage(i) {
         return pdf.getPage(i).then(function(page) {
-            var scale = 1.0;
+            var scale = 1.5;
             var viewport = page.getViewport({ scale: scale, });
             var outputScale = window.devicePixelRatio || 1;
         
