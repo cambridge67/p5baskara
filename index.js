@@ -17,14 +17,19 @@ async function run() {
 
     const pdfjsLib = window["pdfjs-dist/build/pdf"]
 
-    const pdfRaw = await fetch("assets/baskara.pdf").then(res => res.arrayBuffer())
+    const pdfjsWorkerRaw = await tryDo(5, () => fetch("https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js").then(res => res.blob()))
+    const pdfjsWorker = new Worker(URL.createObjectURL(pdfjsWorkerRaw))
+
+    pdfjsLib.GlobalWorkerOptions.workerPort = pdfjsWorker
+
+    const pdfRaw = await tryDo(5, () => fetch("assets/baskara.pdf").then(res => res.arrayBuffer()))
     const pdf = await pdfjsLib.getDocument(pdfRaw).promise
 
     const render = []
 
     for (let i = 1; i <= 19; i++) {
         const num = i
-        render.push(renderPage(num))
+        render.push(tryDo(2, renderPage, num))
     }
 
     await Promise.all(render)
@@ -49,6 +54,17 @@ async function run() {
 
     function scrollTo(i) {
         return document.getElementById(`${i}`).scrollIntoView()
+    }
+
+    async function tryDo(timeout, func, ...args) {
+        for (let i = 0; i < 10; i++) {
+            try {
+                const res = await func(...args)
+                return res
+            } catch {
+                await new Promise(resolve => setTimeout(resolve, timeout * (i+1) * 1000))
+            }
+        }
     }
 
     async function renderPage(i) {
